@@ -11,14 +11,18 @@
 @interface ViewController ()
 
 @property (weak, nonatomic) IBOutlet UITextField *billAmountTextField;
+@property (weak, nonatomic) IBOutlet UILabel *tipAmountLabel;
+@property (weak, nonatomic) IBOutlet UITextField *tipPercentageTextField;
 
 @end
 
 @implementation ViewController
 
 - (IBAction)calculateTip:(id)sender {
-    self.tipPercentage = 0.15;
+    self.tipPercentage = [self.tipPercentageTextField.text floatValue] / 100;
     self.tipTotal = self.tipPercentage * [self.billAmountTextField.text floatValue];
+    
+    self.tipAmountLabel.text = [NSString stringWithFormat:@"$%.02f", self.tipTotal];
 }
 
 - (void)viewDidLoad {
