@@ -13,6 +13,11 @@
 @property (weak, nonatomic) IBOutlet UITextField *billAmountTextField;
 @property (weak, nonatomic) IBOutlet UILabel *tipAmountLabel;
 @property (weak, nonatomic) IBOutlet UITextField *tipPercentageTextField;
+@property (weak, nonatomic) IBOutlet NSLayoutConstraint *topConstraint;
+@property (weak, nonatomic) IBOutlet UISlider *slider;
+
+//- (void)keyboardDidShow: (NSNotification *) notif;
+//- (void)keyboardDidHide: (NSNotification *) notif;
 
 @end
 
@@ -23,6 +28,17 @@
     self.tipTotal = self.tipPercentage * [self.billAmountTextField.text floatValue];
     
     self.tipAmountLabel.text = [NSString stringWithFormat:@"$%.02f", self.tipTotal];
+}
+
+- (IBAction)adjustTipPercentage:(id)sender {
+//    UISlider *slider = (UISlider* ) sender;
+    if (UIGestureRecognizerStateChanged) {
+        self.tipPercentage = self.slider.value;
+        NSString *newValue;
+        
+        newValue = [NSString stringWithFormat:@"%.f", self.slider.value];
+        self.tipPercentageTextField.text = newValue;
+    }
 }
 
 -(void)dismissKeyboard {
@@ -38,6 +54,7 @@
                                    action:@selector(dismissKeyboard)];
     
     [self.view addGestureRecognizer:tap];
+    [self registerForKeyboardNotifications];
 }
 
 - (void)didReceiveMemoryWarning {
@@ -45,6 +62,30 @@
     // Dispose of any resources that can be recreated.
 }
 
+- (void)registerForKeyboardNotifications
+{
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidShow:)
+                                                 name:UIKeyboardDidShowNotification object:nil];
+    
+    [[NSNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(keyboardDidHide:)
+                                                 name:UIKeyboardWillHideNotification object:nil];
+    
+}
 
+- (void)keyboardDidShow: (NSNotification *) notif{
+    [UIView animateWithDuration:0.1
+                     animations:^{
+                         self.topConstraint.constant = 30;
+                     }];
+}
+
+- (void)keyboardDidHide: (NSNotification *) notif{
+    [UIView animateWithDuration:0.1
+                     animations:^{
+                         self.topConstraint.constant = 120;
+                     }];
+}
 
 @end
