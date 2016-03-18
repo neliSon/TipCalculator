@@ -10,9 +10,16 @@
 
 @interface ViewController ()
 
+@property (weak, nonatomic) IBOutlet UITextField *billAmountTextField;
+
 @end
 
 @implementation ViewController
+
+- (IBAction)calculateTip:(id)sender {
+    self.tipPercentage = 0.15;
+    self.tipTotal = self.tipPercentage * [self.billAmountTextField.text floatValue];
+}
 
 - (void)viewDidLoad {
     [super viewDidLoad];
